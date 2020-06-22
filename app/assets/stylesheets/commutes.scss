@@ -1,3 +1,71 @@
 // Place all the styles related to the Commutes controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
+$mobile-screen: 768px;
+
+* {
+    box-sizing: border-box;
+}
+
+.commute-nz {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: white;
+    display: flex;
+    flex-direction: column;
+
+    &__header {
+        width: 100%;
+        background: #2c3e50;
+        z-index: 1;
+        box-shadow: 0 5px 3px #77777744;
+        padding: 30px;
+    }
+
+    &__content {
+        display: flex;
+        @media (min-width: $mobile-screen) {
+            flex-direction: row;
+        }
+        @media (max-width: $mobile-screen) {
+            flex-direction: column;
+        }
+        width: 100%;
+        flex-grow: 1;
+    }
+    
+    &__map-panel, &__details-panel {
+        @media (min-width: $mobile-screen) {
+            width: 50%;
+        }
+        @media (max-width: $mobile-screen) {
+            width: 100%;
+        }
+    }
+
+    &__map-panel {
+        background: #ecf0f1;
+        padding: 10px;
+        min-height: 400px;
+    }
+
+    &__details-panel {
+        background: #ecf0f1;
+    }
+
+    &__district-select {
+        background: #ecf0f1;
+        border-radius: 5px;
+    }
+
+    &__map {
+        width: 100%;
+        height: 100%;
+        background: #3498db55;
+        box-shadow: 0 5px 3px #77777744;
+    }
+}
