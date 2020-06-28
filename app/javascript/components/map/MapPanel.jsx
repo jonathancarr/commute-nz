@@ -11,13 +11,16 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
   const path = useRef(null);
   const dimensions = useRef(null);
 
+  const selectedRef = useRef(null);
+
   useEffect(() => {
+    selectedRef.current = selected;
     if(!selected) return;
 
     const svg = select(svgRef.current);
     svg.select(".features").selectAll("path")
       .transition()
-      .attr("fill", (d) => d.properties.SA22018_V1 === selected.id ? "#8e44ad" : "#1abc9c")
+      .attr("fill", (d) => d.properties.SA22018_V1 === selected.id ? "#9b59b6" : "#1abc9c")
 
     svg.select(".commutes").selectAll("path").remove()
 
@@ -47,10 +50,11 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
       .data(commutePaths)
       .enter()
       .append("path")
-      .attr("stroke", d => d.direction == "outgoing" ? "#2980b9" : "#E74C3C")
+      .attr("stroke", d => d.direction == "outgoing" ? "#2980b9" : "#e74c3c")
       .attr("id", d => `commute-${d.from}-${d.to}`)
       .attr("opacity", 0.75)
       .attr("fill", "none")
+      .attr("pointer-events", "none")
       .attr("stroke-width", d => commuteWidthScale(d.count))
       .attr("stroke-linecap", "round")
       .attr("d", d => {
@@ -69,17 +73,17 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
       const length = ele.node().getTotalLength();
       ele.attr("stroke-dasharray", length + " " + length)
         .attr("stroke-dashoffset", -length)
-      ele.transition().delay(1000).duration(2000).attr("stroke-dashoffset", 0)
+      ele.transition().delay(1500).duration(2000).attr("stroke-dashoffset", 0)
     })
 
     let minX = bounds[0][0], minY = bounds[0][1], maxX = bounds[1][0], maxY = bounds[1][1];
 
     commutePaths.forEach((commute) => {
-      const b = path.current.bounds(svg.selectAll(`#path-${commute.direction == "outgoing" ? commute.from : commute.to}`).data()[0]);
-      minX = Math.min(minX, b[0][0])
-      minY = Math.min(minY, b[0][1])
-      maxX = Math.max(maxX, b[1][0])
-      maxY = Math.max(maxY, b[1][1])
+      const [cx, cy] = path.current.centroid(svg.selectAll(`#path-${commute.direction == "outgoing" ? commute.from : commute.to}`).data()[0]);
+      minX = Math.min(minX, cx)
+      minY = Math.min(minY, cy)
+      maxX = Math.max(maxX, cx)
+      maxY = Math.max(maxY, cy)
     });
 
     const pathw = maxX - minX;
@@ -145,6 +149,21 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
         .attr("fill", "#1abc9c")
         .attr("stroke-width", "0.1px")
         .attr("stroke", (d) => "#FFFFFF")
+        .style("cursor", "pointer")
+        .on("mouseover", function (d) {
+          if (selectedRef.current && selectedRef.current.id == d.properties.SA22018_V1) {
+            select(this).transition().attr("fill", "#8e44ad");
+          } else {
+            select(this).transition().attr("fill", "#16a085")
+          }
+        })
+        .on("mouseout", function (d) {
+          if (selectedRef.current && selectedRef.current.id == d.properties.SA22018_V1) {
+            select(this).transition().attr("fill", "#9b59b6");
+          } else {
+            select(this).transition().attr("fill", "#1abc9c");
+          }
+        })
         .on("click", (d) => setSelected({ name: d.properties.SA22018__1, id: d.properties.SA22018_V1}))
 
     svg.append("g")

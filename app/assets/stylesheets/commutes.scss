@@ -37,7 +37,7 @@ $mobile-screen: 768px;
         width: 100%;
         flex-grow: 1;
     }
-    
+
     &__map-panel, &__details-panel {
         @media (min-width: $mobile-screen) {
             width: 50%;
