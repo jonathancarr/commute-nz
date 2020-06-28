@@ -13,7 +13,7 @@ const MapPanel = ({ features, areas, selected, setSelected, commutes }) => {
 
   useEffect(() => {
     if(!selected) return;
-  
+
     const svg = select(svgRef.current);
     svg.select(".features").selectAll("path")
       .transition()
@@ -25,7 +25,7 @@ const MapPanel = ({ features, areas, selected, setSelected, commutes }) => {
       (result, key) => [... result, {to: selected.id, from: key, count: commutes[key] }],
       []
     )
-   
+
     const d = svg.selectAll(`#path-${selected.id}`).data()[0]
 
     const [x, y] = path.current.centroid(d);
@@ -64,7 +64,7 @@ const MapPanel = ({ features, areas, selected, setSelected, commutes }) => {
     })
 
     let minX = bounds[0][0], minY = bounds[0][1], maxX = bounds[1][0], maxY = bounds[1][1];
-    
+
     commutePaths.forEach((commute) => {
       const b = path.current.bounds(svg.selectAll(`#path-${commute.from}`).data()[0]);
       console.log(b[1][1]);
@@ -73,17 +73,17 @@ const MapPanel = ({ features, areas, selected, setSelected, commutes }) => {
       maxX = Math.max(maxX, b[1][0])
       maxY = Math.max(maxY, b[1][1])
     });
-    
+
     const pathw = maxX - minX;
     const pathh = maxY - minY;
     const kx = dimensions.current[0]/pathw;
     const ky = dimensions.current[1]/pathh;
-    
-    const k = Math.min(0.75 * Math.min(kx, ky), 500)
-  
+
+    const k = Math.min(0.9 * Math.min(kx, ky), 500)
+
     svg.transition().duration(4000).call(
       zom.current.transform,
-      zoomIdentity.translate(dimensions.current[0]/2, dimensions.current[1]/2).scale(k).translate(-x, -y),
+      zoomIdentity.translate(dimensions.current[0]/2, dimensions.current[1]/2).scale(k).translate(-(minX + maxX)/2, -(minY + maxY)/2),
     )
 
   }, [selected]);
