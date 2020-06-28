@@ -4,7 +4,7 @@ import { geoIdentity, geoPath } from 'd3-geo'
 import { zoom, zoomIdentity, zoomTransform } from 'd3-zoom'
 import { scaleLinear, scaleLog } from 'd3-scale'
 
-const MapPanel = ({ features, areas, selected, setSelected, commutes }) => {
+const MapPanel = ({ features, selected, setSelected, commutes }) => {
   const svgRef = useRef(null);
 
   const zom = useRef(null);
@@ -21,10 +21,19 @@ const MapPanel = ({ features, areas, selected, setSelected, commutes }) => {
 
     svg.select(".commutes").selectAll("path").remove()
 
-    const commutePaths = Object.keys(commutes).reduce(
-      (result, key) => [... result, {to: selected.id, from: key, count: commutes[key] }],
+    const outgoingPaths = Object.keys(commutes.outgoing).reduce(
+      (result, key) => [... result, {to: selected.id, from: key, count: commutes.outgoing[key], direction: 'outgoing' }],
       []
     )
+
+    const incomingPaths = Object.keys(commutes.incoming).reduce(
+      (result, key) => [... result, {to: key, from: selected.id, count: commutes.incoming[key], direction: 'incoming' }],
+      []
+    )
+
+    const commutePaths = [...outgoingPaths, ...incomingPaths]
+
+    console.log(commutePaths)
 
     const d = svg.selectAll(`#path-${selected.id}`).data()[0]
 
@@ -32,15 +41,15 @@ const MapPanel = ({ features, areas, selected, setSelected, commutes }) => {
     const bounds = path.current.bounds(d);
 
     const commuteWidthScale = scaleLinear()
-      .domain([0, 500])
-      .range([0.05, 0.5]);
+      .domain([0, 1000])
+      .range([0.03, 0.25]);
 
     svg.select(".commutes")
       .selectAll("path")
       .data(commutePaths)
       .enter()
       .append("path")
-      .attr("stroke", "#2980b9")
+      .attr("stroke", d => console.log(d.direction) || d.direction == "outgoing" ? "#2980b9" : "#E74C3C")
       .attr("id", d => `commute-${d.from}-${d.to}`)
       .attr("opacity", 0.75)
       .attr("fill", "none")
@@ -49,10 +58,12 @@ const MapPanel = ({ features, areas, selected, setSelected, commutes }) => {
       .attr("d", d => {
         const source = svg.selectAll(`#path-${d.from}`).data()[0];
         const [sourceX, sourceY] = path.current.centroid(source);
-        const dx = x - sourceX
-        const dy = y - sourceY
+        const target = svg.selectAll(`#path-${d.to}`).data()[0];
+        const [targetX, targetY] = path.current.centroid(target);
+        const dx = targetX - sourceX
+        const dy = targetY - sourceY
         const dr = Math.sqrt(dx * dx + dy * dy);
-        return "M" + sourceX + "," + sourceY + "A" + dr + "," + dr + " 0 0,1 " + x + "," + y;
+        return "M" + sourceX + "," + sourceY + "A" + dr + "," + dr + " 0 0,1 " + targetX + "," + targetY;
       });
 
     commutePaths.forEach((d) => {
@@ -60,14 +71,13 @@ const MapPanel = ({ features, areas, selected, setSelected, commutes }) => {
       const length = ele.node().getTotalLength();
       ele.attr("stroke-dasharray", length + " " + length)
         .attr("stroke-dashoffset", -length)
-      ele.transition().delay(3000).duration(2000).attr("stroke-dashoffset", 0)
+      ele.transition().delay(1000).duration(2000).attr("stroke-dashoffset", 0)
     })
 
     let minX = bounds[0][0], minY = bounds[0][1], maxX = bounds[1][0], maxY = bounds[1][1];
 
     commutePaths.forEach((commute) => {
-      const b = path.current.bounds(svg.selectAll(`#path-${commute.from}`).data()[0]);
-      console.log(b[1][1]);
+      const b = path.current.bounds(svg.selectAll(`#path-${commute.direction == "outgoing" ? commute.from : commute.to}`).data()[0]);
       minX = Math.min(minX, b[0][0])
       minY = Math.min(minY, b[0][1])
       maxX = Math.max(maxX, b[1][0])
@@ -80,12 +90,13 @@ const MapPanel = ({ features, areas, selected, setSelected, commutes }) => {
     const ky = dimensions.current[1]/pathh;
 
     const k = Math.min(0.9 * Math.min(kx, ky), 500)
+    const xTranslate = - (minX + maxX) / 2
+    const yTranslate = - (minY + maxY) / 2
 
-    svg.transition().duration(4000).call(
+    svg.transition().duration(2000).call(
       zom.current.transform,
-      zoomIdentity.translate(dimensions.current[0]/2, dimensions.current[1]/2).scale(k).translate(-(minX + maxX)/2, -(minY + maxY)/2),
+      zoomIdentity.translate(dimensions.current[0]/2, dimensions.current[1]/2).scale(k).translate(xTranslate, yTranslate),
     )
-
   }, [selected]);
 
   useEffect(() => {
@@ -111,7 +122,6 @@ const MapPanel = ({ features, areas, selected, setSelected, commutes }) => {
 
       svg.select(".features").selectAll("path")
       .attr("stroke-width", lineScale(event.transform.k))
-
     }
 
     const lineScale = scaleLog()
@@ -122,7 +132,7 @@ const MapPanel = ({ features, areas, selected, setSelected, commutes }) => {
       .scaleExtent([1, 500])
       .translateExtent([[- width / 2, - height / 2], [1.5 * width, 1.5 *  height]])
       .on('zoom', zoomed);
-    
+
    svg.append("g")
       .attr("class", "features")
       .selectAll("path")
@@ -138,7 +148,7 @@ const MapPanel = ({ features, areas, selected, setSelected, commutes }) => {
 
     svg.append("g")
       .attr("class", "commutes");
-      
+
     svg.call(zom.current)
 
   }, [features])

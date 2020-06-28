@@ -6,26 +6,29 @@ import { json, csv } from 'd3-request'
 
 const App = () => {
   const [features, setFeatures] = useState([]);
-  const [travelToEdu, setTravelToEdu] = useState(null);
+  const [census, setCensus] = useState(null);
   const [selected, setSelected] = useState(null);
   const areas = useMemo(() => features.features ? features.features.reduce(
     (result, feature) => [...result, { id: feature.properties.SA22018_V1, name: feature.properties.SA22018__1 }], []) : [],
     [features]
   );
 
-  const commutes = useMemo(() => (travelToEdu && selected) ? travelToEdu.reduce((result, commute) => {
-    const code1 = commute.SA2_code_usual_residence_address;
-    const code2 = commute.SA2_code_educational_address;
+  const commutes = useMemo(() => (census && selected) ? census.reduce((result, commute) => {
+    const code1 = commute.from;
+    const code2 = commute.to;
 
     if (code1 === selected.id) {
-      if (!(code2 in result)) result[code2] = 0;
+      if (!(code2 in result.outgoing)) result.outgoing[code2] = 0;
 
-      result[code2] += parseInt(commute.Total)
+      result.outgoing[code2] += parseInt(commute.Total)
+    }
+    if (code2 === selected.id) {
+      if (!(code1 in result.incoming)) result.incoming[code1] = 0;
+
+      result.incoming[code1] += parseInt(commute.Total)
     }
     return result;
-  }, {}) : [], [selected, travelToEdu])
-
-  console.log(commutes)
+  }, { incoming: {}, outgoing: {}}) : [], [selected, census])
 
   useEffect(() => {
     json("/nz-sa2.json", (error, data) => {
@@ -35,21 +38,21 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    csv("/2018-census-main-means-of-travel-to-education-by-statistical.csv", (error, data) => {
+    csv("/2018_census.csv", (error, data) => {
       if(error) throw error
-      setTravelToEdu(data);
+      setCensus(data);
     })
   }, []);
 
   return (
     <div className="commute-nz">
-      <Header 
+      <Header
         areas={areas}
         selected={selected}
         setSelected={setSelected}
       />
       <div className="commute-nz__content">
-        <MapPanel 
+        <MapPanel
           features={features}
           areas={areas}
           selected={selected}
