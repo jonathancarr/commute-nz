@@ -41,8 +41,8 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
     const bounds = path.current.bounds(d);
 
     const commuteWidthScale = scaleLinear()
-      .domain([0, 1000])
-      .range([0.03, 0.25]);
+      .domain([0, 750])
+      .range([0.05, 0.25]);
 
     svg.select(".commutes")
       .selectAll("path")

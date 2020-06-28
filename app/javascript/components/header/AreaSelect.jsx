@@ -10,7 +10,7 @@ const AreaSelect = ({ areas, selected, setSelected }) => {
       getOptionLabel={(option) => option.name}
       value={selected}
       onChange={(event, newValue) => setSelected(newValue)}
-      renderInput={(params) => <TextField {...params} label="District" variant="outlined" />}
+      renderInput={(params) => <TextField {...params} label="Area" variant="outlined" />}
     />
   )
 }

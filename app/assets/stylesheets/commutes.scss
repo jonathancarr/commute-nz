@@ -68,4 +68,9 @@ $mobile-screen: 768px;
         background: #3498db55;
         box-shadow: 0 5px 3px #77777744;
     }
+
+    .MuiInputLabel-outlined.MuiInputLabel-shrink {
+        transform: translate(14px, 4px) scale(0.75);
+    }
 }
+
