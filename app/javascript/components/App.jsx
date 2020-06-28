@@ -3,12 +3,13 @@ import Header from './header/Header'
 import MapPanel from './map/MapPanel'
 import DetailsPanel from './details/DetailsPanel'
 import { json, csv } from 'd3-request'
+import { feature } from 'topojson-client'
 
 const App = () => {
-  const [features, setFeatures] = useState([]);
+  const [features, setFeatures] = useState(null);
   const [census, setCensus] = useState(null);
   const [selected, setSelected] = useState(null);
-  const areas = useMemo(() => features.features ? features.features.reduce(
+  const areas = useMemo(() => features ? features.features.reduce(
     (result, feature) => [...result, { id: feature.properties.SA22018_V1, name: feature.properties.SA22018__1 }], []) : [],
     [features]
   );
@@ -30,10 +31,12 @@ const App = () => {
     return result;
   }, { incoming: {}, outgoing: {}}) : [], [selected, census])
 
+  console.log(commutes)
+
   useEffect(() => {
-    json("/nz-sa2.json", (error, data) => {
-      if(error) throw error
-      setFeatures(data);
+    json("/nz-sa2-topo.json", (error, data) => {
+      if(error) throw error;
+      setFeatures(feature(data, data.objects['nz-sa2']));
     })
   }, []);
 
@@ -53,7 +56,7 @@ const App = () => {
       />
       <div className="commute-nz__content">
         <MapPanel
-          features={features}
+          features  ={features}
           areas={areas}
           selected={selected}
           setSelected={setSelected}

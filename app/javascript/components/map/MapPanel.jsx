@@ -33,8 +33,6 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
 
     const commutePaths = [...outgoingPaths, ...incomingPaths]
 
-    console.log(commutePaths)
-
     const d = svg.selectAll(`#path-${selected.id}`).data()[0]
 
     const [x, y] = path.current.centroid(d);
@@ -49,7 +47,7 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
       .data(commutePaths)
       .enter()
       .append("path")
-      .attr("stroke", d => console.log(d.direction) || d.direction == "outgoing" ? "#2980b9" : "#E74C3C")
+      .attr("stroke", d => d.direction == "outgoing" ? "#2980b9" : "#E74C3C")
       .attr("id", d => `commute-${d.from}-${d.to}`)
       .attr("opacity", 0.75)
       .attr("fill", "none")
@@ -100,7 +98,7 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
   }, [selected]);
 
   useEffect(() => {
-    if (features.length === 0) return;
+    if (!features) return;
 
     dimensions.current = [svgRef.current.clientWidth, svgRef.current.clientHeight];
     const [width, height] = dimensions.current;
@@ -117,7 +115,10 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
       .projection(projection);
 
     const zoomed = (a) => {
-      svg.selectAll('path') // To prevent stroke width from scaling
+      svg.select('.features') // To prevent stroke width from scaling
+        .attr('transform', event.transform)
+
+      svg.select('.commutes')
         .attr('transform', event.transform)
 
       svg.select(".features").selectAll("path")
