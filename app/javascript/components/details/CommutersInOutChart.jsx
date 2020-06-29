@@ -78,6 +78,11 @@ const CommutersInOutChart = ({ name, commutes }) => {
         .attr("stroke", "white")
         .style("stroke-width", "2px")
 
+    select(pieRef.current)
+      .append("g")
+      .attr("class", "pie-labels")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+
     select(keyRef.current)
       .append("g")
       .attr("class", "key-squares")
@@ -109,10 +114,18 @@ const CommutersInOutChart = ({ name, commutes }) => {
         .style("alignment-baseline", "central")
 
     setLoaded(true);
-      
   }, []);
 
   useEffect(() => {
+    select(pieRef.current)
+      .select(".pie-labels")
+      .selectAll("text")
+      .transition()
+      .attr("opacity", 0)
+      .on("end", function (d) {
+        select(this).remove()
+      })
+
     const p = pie()
       .value((d, i) => pieData[KEYS[i]])
 
@@ -130,8 +143,6 @@ const CommutersInOutChart = ({ name, commutes }) => {
       };
     }
 
-    console.log(labels)
-
     select(keyRef.current)
       .selectAll(".legend-labels")
       .text(d => labels[d])
@@ -142,6 +153,25 @@ const CommutersInOutChart = ({ name, commutes }) => {
       .transition()
       .duration(500)
       .attrTween("d", arcTween)
+      .on("end", function (d, i) {
+        select(pieRef.current)
+          .select(".pie-labels")
+          .append("text")
+          .text(d.value)
+          .style("text-anchor", "middle")
+          .style("alignment-baseline", "central")
+          .attr("transform", () => "translate(" + arcGenerator.current.centroid(d) + ")")
+          .attr("opacity", 0)
+          .style("font-weight", "bold")
+          .transition()
+          .attr("opacity", () => {
+            if (Math.abs(d.startAngle - d.endAngle) > Math.PI / 5){
+              return 1;
+            } else {
+              return 0;
+            }
+          })
+      })
 
   }, [commutes, loaded, name])
 

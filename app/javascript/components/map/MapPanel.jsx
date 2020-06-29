@@ -44,7 +44,7 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
 
     const commuteWidthScale = scaleLinear()
       .domain([0, 750])
-      .range([0.05, 0.25]);
+      .range([0.03, 0.5]);
 
     svg.select(".commutes")
       .selectAll("path")
@@ -56,12 +56,14 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
       .attr("opacity", 0.75)
       .attr("fill", "none")
       .attr("pointer-events", "none")
-      .attr("stroke-width", d => commuteWidthScale(d.count))
+      .attr("stroke-width", d =>commuteWidthScale(d.count))
       .attr("stroke-linecap", "round")
       .attr("d", d => {
         const source = svg.selectAll(`#path-${d.from}`).data()[0];
+        if (!source) return;
         const [sourceX, sourceY] = path.current.centroid(source);
         const target = svg.selectAll(`#path-${d.to}`).data()[0];
+        if(!target) return;
         const [targetX, targetY] = path.current.centroid(target);
         const dx = targetX - sourceX
         const dy = targetY - sourceY
@@ -81,6 +83,7 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
 
     commutePaths.forEach((commute) => {
       const [cx, cy] = path.current.centroid(svg.selectAll(`#path-${commute.direction == "outgoing" ? commute.from : commute.to}`).data()[0]);
+      if (!cx || !cy) return;
       minX = Math.min(minX, cx)
       minY = Math.min(minY, cy)
       maxX = Math.max(maxX, cx)
