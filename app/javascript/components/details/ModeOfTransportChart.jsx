@@ -2,6 +2,7 @@ import React from 'react'
 import { useRef, useEffect, useState } from 'react';
 import { select } from 'd3-selection';
 import { scaleLinear } from 'd3-scale';
+import { axisBottom } from 'd3-axis';
 
 const KEY_LABELS = {
   "Work at home": "Work at home",
@@ -78,6 +79,8 @@ const ModeOfTransportChart = ({ transportModes, name }) => {
       .attr("height", 20)
       .attr("stroke", "white")
 
+    svg.append("g").attr("class", "axis")
+
     setLoaded(true);
   }, []);
 
@@ -100,6 +103,12 @@ const ModeOfTransportChart = ({ transportModes, name }) => {
       .domain([0, maxRowVal])
       .range([0, width - barX - 10])
 
+    var axis = axisBottom().scale(barScale);
+
+    svg.select(".axis")
+      .attr("transform", "translate(" + barX + "," + 30 * Object.keys(transportModes).length + ")")
+      .transition()
+      .call(axis)
 
     xOffsets.current = Object.keys(transportModes).reduce((result, mode) => ({
       ...result,
