@@ -17,19 +17,21 @@ const App = () => {
   const commutes = useMemo(() => (census && selected) ? census.reduce((result, commute) => {
     const code1 = commute.from;
     const code2 = commute.to;
+    if (code1 === selected.id && code2 === selected.id) {
+      if (!(code1 in result.local)) result.local[code1] = 0;
 
-    if (code1 === selected.id) {
+      result.local[code1] += parseInt(commute.Total)
+    } else if (code1 === selected.id) {
       if (!(code2 in result.outgoing)) result.outgoing[code2] = 0;
 
       result.outgoing[code2] += parseInt(commute.Total)
-    }
-    if (code2 === selected.id) {
+    } else if (code2 === selected.id) {
       if (!(code1 in result.incoming)) result.incoming[code1] = 0;
 
       result.incoming[code1] += parseInt(commute.Total)
     }
     return result;
-  }, { incoming: {}, outgoing: {}}) : [], [selected, census])
+  }, { incoming: {}, outgoing: {}, local: {}}) : [], [selected, census])
 
 
   useEffect(() => {
@@ -63,6 +65,7 @@ const App = () => {
         />
         <DetailsPanel
           selected={selected}
+          commutes={commutes}
         />
       </div>
     </div>

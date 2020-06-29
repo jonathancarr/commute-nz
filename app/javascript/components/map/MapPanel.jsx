@@ -46,8 +46,6 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
       .domain([0, 750])
       .range([0.05, 0.25]);
 
-    console.log(commutes)
-
     svg.select(".commutes")
       .selectAll("path")
       .data(commutePaths)
@@ -68,9 +66,6 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
         const dx = targetX - sourceX
         const dy = targetY - sourceY
         const dr = Math.sqrt(dx * dx + dy * dy);
-        console.log(d.from)
-        console.log(source)
-        console.log({ sourceX, sourceY, dr, dr, targetX, targetY })
         return "M" + sourceX + "," + sourceY + "A" + dr + "," + dr + " 0 0,1 " + targetX + "," + targetY;
       });
 
