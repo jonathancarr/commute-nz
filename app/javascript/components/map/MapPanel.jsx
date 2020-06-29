@@ -123,14 +123,8 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
       .projection(projection);
 
     const zoomed = (a) => {
-      svg.select('.features') // To prevent stroke width from scaling
+      svg.select('.map')
         .attr('transform', event.transform)
-
-      svg.select('.commutes')
-        .attr('transform', event.transform)
-
-      svg.select(".features").selectAll("path")
-      .attr("stroke-width", lineScale(event.transform.k))
     }
 
     const lineScale = scaleLog()
@@ -143,6 +137,8 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
       .on('zoom', zoomed);
 
    svg.append("g")
+      .attr("class", "map")
+      .append("g")
       .attr("class", "features")
       .selectAll("path")
       .data(features.features)
@@ -151,7 +147,7 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
         .attr("d", path.current)
         .attr("id", (d) => `path-${d.properties.SA22018_V1}`)
         .attr("fill", "#1abc9c")
-        .attr("stroke-width", "0.1px")
+        .attr("stroke-width", 0.05)
         .attr("stroke", (d) => "#FFFFFF")
         .style("cursor", "pointer")
         .on("mouseover", function (d) {
@@ -176,7 +172,8 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
           }
         });
 
-    svg.append("g")
+    svg.select(".map")
+      .append("g")
       .attr("class", "commutes");
 
     svg.call(zom.current)
