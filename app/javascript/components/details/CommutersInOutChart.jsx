@@ -176,7 +176,7 @@ const CommutersInOutChart = ({ name, commutes }) => {
   }, [commutes, loaded, name])
 
   return (
-    <div className="commuters-chart">
+    <div className="commuters-chart" tabIndex={0}>
       <svg className="commuters-chart__key" ref={keyRef} />
       <svg className="commuters-chart__pie" ref={pieRef} />
     </div>
