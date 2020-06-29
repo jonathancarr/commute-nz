@@ -8,6 +8,10 @@ $mobile-screen: 768px;
     box-sizing: border-box;
 }
 
+body {
+    font-family: sans-serif;
+}
+
 .commute-nz {
     top: 0;
     left: 0;
@@ -30,6 +34,7 @@ $mobile-screen: 768px;
         display: flex;
         @media (min-width: $mobile-screen) {
             flex-direction: row;
+            overflow-y: hidden;
         }
         @media (max-width: $mobile-screen) {
             flex-direction: column;
@@ -49,12 +54,37 @@ $mobile-screen: 768px;
 
     &__map-panel {
         background: #ecf0f1;
-        padding: 10px;
+        @media (min-width: $mobile-screen) {
+            min-height: 100%;
+            padding: 10px 5px 10px 10px;
+        }
+        @media (max-width: $mobile-screen) {
+            padding: 5px;
+        }
         min-height: 400px;
+        position: relative;
     }
 
     &__details-panel {
         background: #ecf0f1;
+        @media (min-width: $mobile-screen) {
+            min-height: 100%;
+            padding: 10px 10px 10px 5px;
+        }
+        @media (max-width: $mobile-screen) {
+            padding: 5px;
+        }
+        overflow-y: scroll;
+        position: relative;
+        flex-grow: 1;
+    }
+
+    &__details {
+        width: 100%;
+        min-height: 100%;
+        background: white;
+        padding: 10px;
+        box-shadow: 0 5px 3px #77777744;
     }
 
     &__district-select {
@@ -63,8 +93,9 @@ $mobile-screen: 768px;
     }
 
     &__map {
-        width: 100%;
-        height: 100%;
+        position: absolute;
+        width: calc(100% - 10px);
+        height: calc(100% - 10px);
         background: #3498db55;
         box-shadow: 0 5px 3px #77777744;
     }
@@ -74,3 +105,26 @@ $mobile-screen: 768px;
     }
 }
 
+.details {
+    &__name {
+        font-size: 1.2rem;
+    }
+}
+
+.commuters-chart {
+    width: 100%;
+    height: 200px;
+    background: #f1c40f;
+}
+
+.distance-charts {
+    width: 100%;
+    height: 500px;
+    background: #e67e22;
+}
+
+.transport-modes-chart {
+    width: 100%;
+    height: 400px;
+    background: #e74c3c;
+}

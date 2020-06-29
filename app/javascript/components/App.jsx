@@ -31,7 +31,6 @@ const App = () => {
     return result;
   }, { incoming: {}, outgoing: {}}) : [], [selected, census])
 
-  console.log(commutes)
 
   useEffect(() => {
     json("/nz-sa2-topo.json", (error, data) => {
@@ -62,7 +61,9 @@ const App = () => {
           setSelected={setSelected}
           commutes={commutes}
         />
-        <DetailsPanel />
+        <DetailsPanel
+          selected={selected}
+        />
       </div>
     </div>
   )

@@ -15,14 +15,15 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
 
   useEffect(() => {
     selectedRef.current = selected;
-    if(!selected) return;
+    select(svgRef.current).select(".commutes").selectAll("path").remove()
+    select(svgRef.current).select(".features").transition().selectAll("path").attr("fill", "#1abc9c")
+
+    if (!selected) return;
 
     const svg = select(svgRef.current);
     svg.select(".features").selectAll("path")
       .transition()
       .attr("fill", (d) => d.properties.SA22018_V1 === selected.id ? "#9b59b6" : "#1abc9c")
-
-    svg.select(".commutes").selectAll("path").remove()
 
     const outgoingPaths = Object.keys(commutes.outgoing).reduce(
       (result, key) => [... result, {to: selected.id, from: key, count: commutes.outgoing[key], direction: 'outgoing' }],
@@ -45,6 +46,8 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
       .domain([0, 750])
       .range([0.05, 0.25]);
 
+    console.log(commutes)
+
     svg.select(".commutes")
       .selectAll("path")
       .data(commutePaths)
@@ -65,6 +68,9 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
         const dx = targetX - sourceX
         const dy = targetY - sourceY
         const dr = Math.sqrt(dx * dx + dy * dy);
+        console.log(d.from)
+        console.log(source)
+        console.log({ sourceX, sourceY, dr, dr, targetX, targetY })
         return "M" + sourceX + "," + sourceY + "A" + dr + "," + dr + " 0 0,1 " + targetX + "," + targetY;
       });
 
@@ -164,7 +170,13 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
             select(this).transition().attr("fill", "#1abc9c");
           }
         })
-        .on("click", (d) => setSelected({ name: d.properties.SA22018__1, id: d.properties.SA22018_V1}))
+        .on("click", (d) => {
+          if (selectedRef.current && d.properties.SA22018_V1 === selectedRef.current.id) {
+            setSelected(null)
+          } else {
+            setSelected({ name: d.properties.SA22018__1, id: d.properties.SA22018_V1})
+          }
+        });
 
     svg.append("g")
       .attr("class", "commutes");
