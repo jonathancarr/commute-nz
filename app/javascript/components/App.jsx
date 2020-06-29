@@ -5,6 +5,22 @@ import DetailsPanel from './details/DetailsPanel'
 import { json, csv } from 'd3-request'
 import { feature } from 'topojson-client'
 
+const TRANSPORT_MODES = [
+  "Work at home",
+  "Study at home",
+  "Drive a private car, truck or van",
+  "Drive a company car, truck or van",
+  "Passenger in a car, truck, van or company bus",
+  "Public bus",
+  "School bus",
+  "Train",
+  "Bicycle",
+  "Walk or jog",
+  "Ferry",
+  "Other",
+]
+
+
 const App = () => {
   const [features, setFeatures] = useState(null);
   const [census, setCensus] = useState(null);
@@ -33,6 +49,40 @@ const App = () => {
     return result;
   }, { incoming: {}, outgoing: {}, local: {}}) : [], [selected, census])
 
+  const transportModes = useMemo(() => {
+    if (!census || !selected) return null;
+
+    const res = TRANSPORT_MODES.reduce((result, mode) => ({
+      ...result,
+      [mode]: {
+        incoming: 0,
+        outgoing: 0,
+        local: 0,
+      }
+    })
+    , {});
+
+    census.forEach((commute) => {
+      const code1 = commute.from;
+      const code2 = commute.to;
+      let direction = null;
+      if (code1 === selected.id && code2 === selected.id) {
+        direction = 'local';
+      } else if (code1 === selected.id) {
+        direction = 'outgoing';
+      } else if (code2 === selected.id) {
+        direction = 'incoming';
+      }
+
+      if (!direction) return;
+
+      TRANSPORT_MODES.forEach(mode => {
+        res[mode][direction] += parseInt(commute[mode]);
+      });
+    })
+
+    return res;
+  }, [selected, census]);
 
   useEffect(() => {
     json("/nz-sa2-topo.json", (error, data) => {
@@ -66,6 +116,7 @@ const App = () => {
         <DetailsPanel
           selected={selected}
           commutes={commutes}
+          transportModes={transportModes}
         />
       </div>
     </div>

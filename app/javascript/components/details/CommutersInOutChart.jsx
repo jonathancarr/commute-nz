@@ -176,10 +176,13 @@ const CommutersInOutChart = ({ name, commutes }) => {
   }, [commutes, loaded, name])
 
   return (
-    <div className="commuters-chart" tabIndex={0}>
-      <svg className="commuters-chart__key" ref={keyRef} />
-      <svg className="commuters-chart__pie" ref={pieRef} />
-    </div>
+    <>
+      <h1 className="chart-title">{`Commuters of ${name}`}</h1>
+      <div className="commuters-chart" tabIndex={0}>
+        <svg className="commuters-chart__key" ref={keyRef} />
+        <svg className="commuters-chart__pie" ref={pieRef} />
+      </div>
+    </>
   )
 }
 

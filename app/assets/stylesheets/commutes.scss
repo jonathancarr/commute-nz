@@ -28,7 +28,7 @@ body {
         background: #2c3e50;
         z-index: 1;
         box-shadow: 0 5px 3px #77777744;
-        padding: 30px;
+        padding: 20px;
     }
 
     &__content {
@@ -100,14 +100,9 @@ body {
     }
 }
 
-.details {
-    &__name {
-        font-size: 1.2rem;
-    }
-
-    &__divider {
-        color: #bdc3c7;
-    }
+.chart-title {
+    text-align: center;
+    font-size: 1.2rem;
 }
 
 $pie-break: 600px;
@@ -138,13 +133,13 @@ $pie-break: 600px;
     border-bottom: 2px solid #bdc3c744;
 }
 
-.distance-charts {
-    width: 100%;
-    height: 500px;
-}
-
 .transport-modes-chart {
     width: 100%;
     height: 400px;
-    // background: #e74c3c;
+    border-bottom: 2px solid #bdc3c744;
+}
+
+.distance-charts {
+    width: 100%;
+    height: 500px;
 }

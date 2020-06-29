@@ -3,19 +3,21 @@ import ModeOfTransportChart from './ModeOfTransportChart';
 import DistanceCharts from './DistanceCharts';
 import CommutersInOutChart from './CommutersInOutChart';
 
-const DetailsPanel = ({ selected, commutes }) => {
+const DetailsPanel = ({ selected, commutes, transportModes }) => {
   return (
     <div className="commute-nz__details-panel">
       <div className="commute-nz__details details">
         { selected && (
           <>
-            <h1 className="details__name">{selected.name}</h1>
             <CommutersInOutChart
               name={selected.name}
               commutes={commutes}
             />
+            <ModeOfTransportChart
+              name={selected.name}
+              transportModes={transportModes}
+            />
             <DistanceCharts />
-            <ModeOfTransportChart />
           </>
         )}
       </div>
