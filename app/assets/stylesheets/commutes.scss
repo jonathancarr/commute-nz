@@ -2,7 +2,7 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
-$mobile-screen: 768px;
+$mobile-screen: 960px;
 
 * {
     box-sizing: border-box;
@@ -43,15 +43,6 @@ body {
         flex-grow: 1;
     }
 
-    &__map-panel, &__details-panel {
-        @media (min-width: $mobile-screen) {
-            width: 50%;
-        }
-        @media (max-width: $mobile-screen) {
-            width: 100%;
-        }
-    }
-
     &__map-panel {
         background: #ecf0f1;
         @media (min-width: $mobile-screen) {
@@ -61,6 +52,7 @@ body {
         @media (max-width: $mobile-screen) {
             padding: 5px;
         }
+        flex-grow: 1;
         min-height: 400px;
         position: relative;
     }
@@ -68,6 +60,8 @@ body {
     &__details-panel {
         background: #ecf0f1;
         @media (min-width: $mobile-screen) {
+            width: 100%;
+            max-width: 600px;
             min-height: 100%;
             padding: 10px 10px 10px 5px;
         }
@@ -111,19 +105,39 @@ body {
     }
 }
 
+$pie-break: 600px;
+
 .commuters-chart {
+    display: flex;
+    @media (min-width: $pie-break) {
+        flex-direction: row;
+    }
+    @media (max-width: $pie-break) {
+        flex-direction: column;
+    }
+    align-items: center;
+
     width: 100%;
-    height: 200px;
+    &__pie {
+        height: 150px;
+        width: 200px;
+    }
+    &__key {
+        @media (max-width: $pie-break) {
+            width: 100%;
+        }
+        flex-grow: 1;
+        height: 150px;
+    }
 }
 
 .distance-charts {
     width: 100%;
     height: 500px;
-    background: #e67e22;
 }
 
 .transport-modes-chart {
     width: 100%;
     height: 400px;
-    background: #e74c3c;
+    // background: #e74c3c;
 }

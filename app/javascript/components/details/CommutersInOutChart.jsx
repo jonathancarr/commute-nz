@@ -22,7 +22,8 @@ const COLORS = {
 const KEYS = ['commuteIn', 'commuteOut', 'local'];
 
 const CommutersInOutChart = ({ name, commutes }) => {
-  const svgRef = useRef(null);
+  const pieRef = useRef(null);
+  const keyRef = useRef(null);
   const pieGenerator = useRef(null);
   const arcGenerator = useRef(null);
 
@@ -40,25 +41,31 @@ const CommutersInOutChart = ({ name, commutes }) => {
     }
   }, [commutes, loaded])
 
-  console.log(pieData);
+  const labels = useMemo(() => {
+    if (!name) return null;
+
+    return {
+      commuteIn: "Commute into " + name,
+      commuteOut: "Commute out of " + name,
+      local: "Commute within " + name,
+    }
+  }, [name]);
 
   useEffect(() => {
-    const width = svgRef.current.clientWidth;
-    const height = svgRef.current.clientHeight;
+    const width = pieRef.current.clientWidth;
+    const height = pieRef.current.clientHeight;
 
     pieGenerator.current = pie()
-      .value((d, i) => console.log(pieData) || pieData[KEYS[i]])
+      .value((d, i) => pieData[KEYS[i]])
       .sort(null);
 
     const data_ready = pieGenerator.current(KEYS)
-
-    console.log(data_ready)
 
     arcGenerator.current = arc()
       .innerRadius(0)
       .outerRadius(RADIUS)
 
-    select(svgRef.current)
+    select(pieRef.current)
       .append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
       .selectAll('pieSlice')
@@ -67,24 +74,53 @@ const CommutersInOutChart = ({ name, commutes }) => {
       .append('path')
         .attr("class", "pieSlice")
         .attr('d', arcGenerator.current)
-        .attr('fill', d => console.log(d) || COLORS[d.data])
+        .attr('fill', d => COLORS[d.data])
         .attr("stroke", "white")
         .style("stroke-width", "2px")
+
+    select(keyRef.current)
+      .append("g")
+      .attr("class", "key-squares")
+      .selectAll(".legend-squares")
+      .data(KEYS)
+      .enter()
+      .append("rect")
+        .attr("class", "legend-squares")
+        .attr("x", 10)
+        .attr("y", (d, i) => 20 + i * 40)
+        .attr("rx", 2)
+        .attr("ry", 2)
+        .attr("width", 30)
+        .attr("height", 30)
+        .attr("fill", d => COLORS[d])
+
+    select(keyRef.current)
+      .append("g")
+      .attr("class", "key-labels")
+      .selectAll("legend-labels")
+      .data(KEYS)
+      .enter()
+      .append("text")
+        .text(d => labels[d])
+        .attr("class", "legend-labels")
+        .attr("font-size", 14)
+        .attr("x", 50)
+        .attr("y", (d, i) => 35 + i * 40)
+        .style("alignment-baseline", "central")
+
     setLoaded(true);
+      
   }, []);
 
   useEffect(() => {
     const p = pie()
-      .value((d, i) => console.log(i) || pieData[KEYS[i]])
+      .value((d, i) => pieData[KEYS[i]])
 
     pieGenerator.current = pie()
-      .value((d, i) => console.log(pieData) || pieData[KEYS[i]])
+      .value((d, i) => pieData[KEYS[i]])
       .sort(null)
 
     const data_ready = pieGenerator.current(KEYS)
-
-    console.log(data_ready)
-    console.log(pieData)
 
     const arcTween = function(a) {
       const i = interpolate(this._current, a);
@@ -94,17 +130,26 @@ const CommutersInOutChart = ({ name, commutes }) => {
       };
     }
 
-    select(svgRef.current)
+    console.log(labels)
+
+    select(keyRef.current)
+      .selectAll(".legend-labels")
+      .text(d => labels[d])
+
+    select(pieRef.current)
       .selectAll('.pieSlice')
       .data(data_ready)
       .transition()
       .duration(500)
       .attrTween("d", arcTween)
 
-  }, [commutes, loaded])
+  }, [commutes, loaded, name])
 
   return (
-    <svg className="commuters-chart" ref={svgRef} />
+    <div className="commuters-chart">
+      <svg className="commuters-chart__key" ref={keyRef} />
+      <svg className="commuters-chart__pie" ref={pieRef} />
+    </div>
   )
 }
 
