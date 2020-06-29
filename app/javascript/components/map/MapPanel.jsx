@@ -147,7 +147,7 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
         .attr("d", path.current)
         .attr("id", (d) => `path-${d.properties.SA22018_V1}`)
         .attr("fill", "#1abc9c")
-        .attr("stroke-width", 0.05)
+        .attr("stroke-width", 0.03)
         .attr("stroke", (d) => "#FFFFFF")
         .style("cursor", "pointer")
         .on("mouseover", function (d) {

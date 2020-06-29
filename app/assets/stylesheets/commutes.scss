@@ -45,16 +45,16 @@ body {
     }
 
     &__map-panel {
-        @include flex-grow(1);
         background: #ecf0f1;
         @media (min-width: $mobile-screen) {
+            @include flex-grow(1);
             min-height: 100%;
             padding: 10px 5px 10px 10px;
         }
         @media (max-width: $mobile-screen) {
             padding: 5px;
+            height: 400px;
         }
-        min-height: 400px;
         position: relative;
     }
 
