@@ -76,7 +76,7 @@ const MapPanel = ({ features, selected, setSelected, commutes, loading }) => {
       const length = ele.node().getTotalLength();
       ele.attr("stroke-dasharray", length + " " + length)
         .attr("stroke-dashoffset", -length)
-      ele.transition().delay(1500).duration(2000).attr("stroke-dashoffset", 0)
+      ele.transition().delay(1000).duration(2000).attr("stroke-dashoffset", 0)
     })
 
     let minX = bounds[0][0], minY = bounds[0][1], maxX = bounds[1][0], maxY = bounds[1][1];
