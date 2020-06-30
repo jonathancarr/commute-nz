@@ -20,11 +20,13 @@ const TRANSPORT_MODES = [
   "Other",
 ]
 
-
 const App = () => {
   const [features, setFeatures] = useState(null);
   const [census, setCensus] = useState(null);
   const [selected, setSelected] = useState(null);
+
+  const loaded = useMemo(() => census && features, [census, features])
+
   const areas = useMemo(() => features ? features.features.reduce(
     (result, feature) => [...result, { id: feature.properties.SA22018_V1, name: feature.properties.SA22018__1 }], []) : [],
     [features]
@@ -104,8 +106,10 @@ const App = () => {
         areas={areas}
         selected={selected}
         setSelected={setSelected}
+        disabled={!loaded}
       />
-      <div className="commute-nz__content">
+      { loaded  && (
+        <div className="commute-nz__content">
         <MapPanel
           features  ={features}
           areas={areas}
@@ -119,6 +123,10 @@ const App = () => {
           transportModes={transportModes}
         />
       </div>
+      )}
+      { !loaded &&
+        <h1> hey dont mind me just loading </h1>
+      }
     </div>
   )
 }

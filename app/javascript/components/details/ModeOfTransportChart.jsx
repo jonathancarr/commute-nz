@@ -100,7 +100,7 @@ const ModeOfTransportChart = ({ transportModes, name }) => {
     const width = svgRef.current.clientWidth;
     const barX = textWidth.current + 10;
     const barScale = scaleLinear()
-      .domain([0, maxRowVal])
+      .domain([0, maxRowVal + 1])
       .range([0, width - barX - 10])
 
     var axis = axisBottom().scale(barScale);

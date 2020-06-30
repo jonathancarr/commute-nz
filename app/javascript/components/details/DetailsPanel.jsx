@@ -17,9 +17,9 @@ const DetailsPanel = ({ selected, commutes, transportModes }) => {
               name={selected.name}
               transportModes={transportModes}
             />
-            <DistanceCharts />
           </>
         )}
+        <DistanceCharts />
       </div>
     </div>
   )
