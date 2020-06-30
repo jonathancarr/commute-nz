@@ -95,6 +95,12 @@ body {
         box-shadow: 0 5px 3px #77777744;
     }
 
+    &__map-loading {
+        text-anchor: middle;
+        alignment-baseline: central;
+        fill: #34495e;
+    }
+
     .MuiInputLabel-outlined.MuiInputLabel-shrink {
         transform: translate(14px, 4px) scale(0.75);
     }

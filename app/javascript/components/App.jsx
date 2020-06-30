@@ -108,7 +108,6 @@ const App = () => {
         setSelected={setSelected}
         disabled={!loaded}
       />
-      { loaded  && (
         <div className="commute-nz__content">
         <MapPanel
           features  ={features}
@@ -116,6 +115,7 @@ const App = () => {
           selected={selected}
           setSelected={setSelected}
           commutes={commutes}
+          loading={!loaded}
         />
         <DetailsPanel
           selected={selected}
@@ -123,10 +123,6 @@ const App = () => {
           transportModes={transportModes}
         />
       </div>
-      )}
-      { !loaded &&
-        <h1> hey dont mind me just loading </h1>
-      }
     </div>
   )
 }

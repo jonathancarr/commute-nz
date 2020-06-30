@@ -4,7 +4,7 @@ import { geoIdentity, geoPath } from 'd3-geo'
 import { zoom, zoomIdentity, zoomTransform } from 'd3-zoom'
 import { scaleLinear, scaleLog } from 'd3-scale'
 
-const MapPanel = ({ features, selected, setSelected, commutes }) => {
+const MapPanel = ({ features, selected, setSelected, commutes, loading }) => {
   const svgRef = useRef(null);
 
   const zom = useRef(null);
@@ -178,11 +178,17 @@ const MapPanel = ({ features, selected, setSelected, commutes }) => {
 
     svg.call(zom.current)
 
-  }, [features])
+  }, [loading])
 
   return (
     <div className="commute-nz__map-panel">
-        <svg className="commute-nz__map" ref={svgRef}/>
+        <svg className="commute-nz__map" ref={svgRef}>
+          { loading && (
+            <text className="commute-nz__map-loading" x="50%" y="50%">
+              Loading...
+            </text>
+          )}
+        </svg>
     </div>
   )
 }
