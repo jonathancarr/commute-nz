@@ -3,7 +3,8 @@
 // You can use Sass (SCSS) here: https://sass-lang.com/
 @import "./mixins.scss";
 
-$mobile-screen: 960px;
+$small-screen: 960px;
+$xsmall-screen: 600px;
 
 * {
     box-sizing: border-box;
@@ -24,6 +25,7 @@ body {
     background: white;
 
     &__header {
+        @include flexbox;
         width: 100%;
         background: #2c3e50;
         z-index: 1;
@@ -31,14 +33,42 @@ body {
         padding: 20px;
     }
 
+    &__title {
+        color: #ecf0f1;
+        @media (min-width: $xsmall-screen) {
+            display: block;
+        }
+        @media (max-width: $xsmall-screen) {
+            display: none;
+        }
+    }
+
+    &__title-heading {
+        margin: 0 15px 0 0;
+    }
+
+    &__subtitle {
+        font-size: 12px;
+        padding: 0;
+        margin: 0 15px 0 0;
+        text-align: right;
+
+    }
+
+    &__area-select {
+        @include flex-grow(1);
+        background: #ecf0f1;
+        border-radius: 5px;
+    }
+
     &__content {
         @include flexbox;
         @include flex-grow(1);
-        @media (min-width: $mobile-screen) {
+        @media (min-width: $small-screen) {
             @include flex-direction(row);
             overflow-y: hidden;
         }
-        @media (max-width: $mobile-screen) {
+        @media (max-width: $small-screen) {
             @include flex-direction(column);
         }
         width: 100%;
@@ -46,12 +76,12 @@ body {
 
     &__map-panel {
         background: #ecf0f1;
-        @media (min-width: $mobile-screen) {
+        @media (min-width: $small-screen) {
             @include flex-grow(1);
             min-height: 100%;
             padding: 10px 5px 10px 10px;
         }
-        @media (max-width: $mobile-screen) {
+        @media (max-width: $small-screen) {
             padding: 5px;
             height: 400px;
         }
@@ -61,13 +91,13 @@ body {
     &__details-panel {
         @include flex-grow(1);
         background: #ecf0f1;
-        @media (min-width: $mobile-screen) {
+        @media (min-width: $small-screen) {
             width: 100%;
             max-width: 600px;
             min-height: 100%;
             padding: 10px 10px 10px 5px;
         }
-        @media (max-width: $mobile-screen) {
+        @media (max-width: $small-screen) {
             padding: 5px;
         }
         overflow-y: scroll;
@@ -80,16 +110,11 @@ body {
         background: white;
         padding: 10px;
         box-shadow: 0 5px 3px #77777744;
-        @include flexbox();
+        @include flexbox;
         @include flex-direction(column);
         align-content: space-between;
         justify-content: space-between;
         color: #2c3e50;
-    }
-
-    &__district-select {
-        background: #ecf0f1;
-        border-radius: 5px;
     }
 
     &__map {
@@ -128,14 +153,12 @@ body {
     }
 }
 
-$pie-break: 600px;
-
 .commuters-chart {
     @include flexbox;
-    @media (min-width: $pie-break) {
+    @media (min-width: $xsmall-screen) {
         @include flex-direction(row);
     }
-    @media (max-width: $pie-break) {
+    @media (max-width: $xsmall-screen) {
         @include flex-direction(column);
     }
     align-items: center;
@@ -147,7 +170,7 @@ $pie-break: 600px;
     }
     &__key {
         @include flex-grow(1);
-        @media (max-width: $pie-break) {
+        @media (max-width: $xsmall-screen) {
             width: 100%;
         }
         height: 150px;

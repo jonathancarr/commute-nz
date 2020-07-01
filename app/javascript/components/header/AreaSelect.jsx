@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField'
 const AreaSelect = ({ areas, selected, setSelected, disabled }) => {
   return (
     <Autocomplete
-      className="commute-nz__district-select"
+      className="commute-nz__area-select"
       options={areas}
       getOptionLabel={(option) => option.name}
       disabled={disabled}
