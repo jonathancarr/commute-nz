@@ -1,7 +1,8 @@
 import React from 'react'
 import ModeOfTransportChart from './ModeOfTransportChart';
-import DistanceCharts from './DistanceCharts';
+import DataSources from './DataSources';
 import CommutersInOutChart from './CommutersInOutChart';
+import Instructions from './Instructions';
 
 const DetailsPanel = ({ selected, commutes, transportModes }) => {
   return (
@@ -19,7 +20,8 @@ const DetailsPanel = ({ selected, commutes, transportModes }) => {
             />
           </>
         )}
-        <DistanceCharts />
+        { !selected && <Instructions /> }
+        <DataSources />
       </div>
     </div>
   )

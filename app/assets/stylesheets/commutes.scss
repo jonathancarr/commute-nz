@@ -80,6 +80,11 @@ body {
         background: white;
         padding: 10px;
         box-shadow: 0 5px 3px #77777744;
+        @include flexbox();
+        @include flex-direction(column);
+        align-content: space-between;
+        justify-content: space-between;
+        color: #2c3e50;
     }
 
     &__district-select {
@@ -111,6 +116,18 @@ body {
     font-size: 1.2rem;
 }
 
+.instructions {
+    text-align: center;
+    color: #2c3e50;
+
+    &__header {
+        font-size: 24px;
+    }
+    &__text {
+        font-size: 16px;
+    }
+}
+
 $pie-break: 600px;
 
 .commuters-chart {
@@ -137,6 +154,15 @@ $pie-break: 600px;
     }
     padding-bottom: 10px;
     border-bottom: 2px solid #bdc3c744;
+}
+
+.sources {
+    &__header {
+        font-weight: bold;
+        font-size: 16px;
+    }
+    line-height: 14px;
+    font-size: 14px;
 }
 
 .transport-modes-chart {
