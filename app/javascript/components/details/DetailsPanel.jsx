@@ -4,7 +4,7 @@ import DataSources from './DataSources';
 import CommutersInOutChart from './CommutersInOutChart';
 import Instructions from './Instructions';
 
-const DetailsPanel = ({ selected, commutes, transportModes }) => {
+const DetailsPanel = ({ selected, commutes, transportModes, loading }) => {
   return (
     <div className="commute-nz__details-panel">
       <div className="commute-nz__details details">
@@ -20,7 +20,7 @@ const DetailsPanel = ({ selected, commutes, transportModes }) => {
             />
           </>
         )}
-        { !selected && <Instructions /> }
+        { !selected && <Instructions loading={loading}/> }
         <DataSources />
       </div>
     </div>

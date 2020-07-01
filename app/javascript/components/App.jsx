@@ -131,6 +131,7 @@ const App = () => {
           selected={selected}
           commutes={commutes}
           transportModes={transportModes}
+          loading={!loaded}
         />
       </div>
     </div>
