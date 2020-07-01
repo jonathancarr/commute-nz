@@ -103,7 +103,7 @@ const ModeOfTransportChart = ({ transportModes, name }) => {
       .domain([0, maxRowVal + 1])
       .range([0, width - barX - 10])
 
-    var axis = axisBottom().scale(barScale);
+    var axis = axisBottom().ticks(5).scale(barScale);
 
     svg.select(".axis")
       .attr("transform", "translate(" + barX + "," + 30 * Object.keys(transportModes).length + ")")
