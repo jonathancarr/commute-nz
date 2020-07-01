@@ -9,6 +9,7 @@ const AreaSelect = ({ areas, selected, setSelected, disabled }) => {
       options={areas}
       getOptionLabel={(option) => option.name}
       disabled={disabled}
+      groupBy={(option) => option.regionName}
       value={selected}
       onChange={(event, newValue) => setSelected(newValue)}
       renderInput={(params) => <TextField {...params} label="Area" variant="outlined" />}

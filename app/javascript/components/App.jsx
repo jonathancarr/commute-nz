@@ -28,7 +28,17 @@ const App = () => {
   const loaded = useMemo(() => census && features, [census, features])
 
   const areas = useMemo(() => features ? features.features.reduce(
-    (result, feature) => [...result, { id: feature.properties.SA22018_V1, name: feature.properties.SA22018__1 }], []) : [],
+    (result, feature) => [...result, {
+      id: feature.properties.SA22018_V1,
+      name: feature.properties.SA22018__1,
+      regionName: feature.properties.REGC2018_1,
+      regionId: feature.properties.REGC2018_V,
+    }], []).sort((a, b) => {
+      if (a.regionId === b.regionId) {
+        return a.id.localeCompare(b.id)
+      }
+      return a.regionId.localeCompare(b.regionId)
+    }) : [],
     [features]
   );
 
