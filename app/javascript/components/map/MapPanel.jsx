@@ -4,6 +4,13 @@ import { geoIdentity, geoPath } from 'd3-geo'
 import { zoom, zoomIdentity, zoomTransform } from 'd3-zoom'
 import { scaleLinear, scaleLog } from 'd3-scale'
 
+const MAP_HIGHLIGHT = "#f1ccff";
+const MAP_HIGHLIGHT_SELECTED = "#d89fed";
+const MAP_FILL = "#ecf0f1";
+const MAP_FILL_SELECTED = "#e0e0e0";
+const STROKE = "#555555"
+const SELECTED_STROKE = "#9b59b6"
+
 const MapPanel = ({ features, selected, setSelected, commutes, loading, setTooltip }) => {
   const svgRef = useRef(null);
 
@@ -16,14 +23,19 @@ const MapPanel = ({ features, selected, setSelected, commutes, loading, setToolt
   useEffect(() => {
     selectedRef.current = selected;
     select(svgRef.current).select(".commutes").selectAll("path").remove()
-    select(svgRef.current).select(".features").transition().selectAll("path").attr("fill", "#1abc9c")
 
     if (!selected) return;
 
     const svg = select(svgRef.current);
     svg.select(".features").selectAll("path")
       .transition()
-      .attr("fill", (d) => d.properties.SA22018_V1 === selected.id ? "#9b59b6" : "#1abc9c")
+      .attr("fill", (d) => d.properties.SA22018_V1 === selected.id ? MAP_HIGHLIGHT : MAP_FILL)
+      .attr("stroke", (d) => d.properties.SA22018_V1 === selected.id ? SELECTED_STROKE : STROKE)
+
+    // Move selected to front
+    const selectedPath = svg.select(`#path-${selected.id}`).node()
+    console.log(selectedPath);
+    selectedPath.parentNode.appendChild(selectedPath);
 
     const outgoingPaths = Object.keys(commutes.outgoing).reduce(
       (result, key) => [... result, {to: selected.id, from: key, count: commutes.outgoing[key], direction: 'outgoing' }],
@@ -146,25 +158,25 @@ const MapPanel = ({ features, selected, setSelected, commutes, loading, setToolt
       .append("path")
         .attr("d", path.current)
         .attr("id", (d) => `path-${d.properties.SA22018_V1}`)
-        .attr("fill", "#1abc9c")
-        .attr("stroke-width", 0.03)
-        .attr("stroke", d => "#FFFFFF")
+        .attr("fill", MAP_FILL)
+        .attr("stroke-width", 0.02)
+        .attr("stroke", d => STROKE)
         .style("cursor", d => d.properties.LAND_AREA_ === 0 ? "default" : "pointer")
         .on("mouseover", function (d) {
           const title = d.properties.SA22018__1;
           setTooltip(`<strong>${title}</strong>`, event.pageX, event.pageY - 20);
           if (selectedRef.current && selectedRef.current.id == d.properties.SA22018_V1) {
-            select(this).transition().attr("fill", "#8e44ad");
+            select(this).transition().attr("fill", MAP_HIGHLIGHT_SELECTED);
           } else {
-            select(this).transition().attr("fill", "#16a085")
+            select(this).transition().attr("fill", MAP_FILL_SELECTED)
           }
         })
         .on("mouseout", function (d) {
           setTooltip(null);
           if (selectedRef.current && selectedRef.current.id == d.properties.SA22018_V1) {
-            select(this).transition().attr("fill", "#9b59b6");
+            select(this).transition().attr("fill", MAP_HIGHLIGHT);
           } else {
-            select(this).transition().attr("fill", "#1abc9c");
+            select(this).transition().attr("fill", MAP_FILL);
           }
         })
         .on("click", (d) => {

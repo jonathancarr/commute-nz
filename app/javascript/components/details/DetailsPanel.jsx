@@ -7,7 +7,7 @@ import TopAreas from './TopAreas';
 
 const DetailsPanel = ({ selected, commutes, transportModes, topAreas, loading, setTooltip }) => {
   return (
-    <div className="commute-nz__details-panel">
+    <div className="commute-nz__details-panel" tabIndex={0}>
       <div className="commute-nz__details details">
         { selected && (
           <>

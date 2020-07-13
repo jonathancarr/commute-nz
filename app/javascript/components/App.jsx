@@ -45,8 +45,9 @@ const App = () => {
     }
   });
 
-  const areas = useMemo(() => features ? features.features.reduce(
-    (result, feature) => [...result, {
+  const areas = useMemo(() => features ? features.features
+    .filter(d => d.properties.LAND_AREA_ > 0)
+    .reduce((result, feature) => [...result, {
       id: feature.properties.SA22018_V1,
       name: feature.properties.SA22018__1,
       regionName: feature.properties.REGC2018_1,
