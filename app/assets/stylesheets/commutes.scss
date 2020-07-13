@@ -255,4 +255,14 @@ body {
     &__count {
         font-weight: bold;
     }
+
+    &__details {
+        @include flexbox();
+        @media (min-width: $xsmall-screen) {
+            @include flex-direction(row)
+        }
+        @media (max-width: $xsmall-screen) {
+            @include flex-direction(column)
+        }
+    }
 }

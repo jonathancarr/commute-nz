@@ -19,8 +19,10 @@ const TopAreas = ({ topAreas, name }) => (
         { topAreas.outgoing.map((area, index) => (
           <div className="top-area">
             <div className="top-area__index top-area__index-outgoing">{index + 1}</div>
-            <span className="top-area__name">{area.name}:</span>
-            <span className="top-area__count">{area.count} commuters</span>
+            <div className="top-area__details">
+              <span className="top-area__name">{area.name}:</span>
+              <span className="top-area__count">{area.count} commuters</span>
+            </div>
           </div>
         ))}
       </>
@@ -31,8 +33,10 @@ const TopAreas = ({ topAreas, name }) => (
         { topAreas.incoming.map((area, index) => (
           <div className="top-area">
             <div className="top-area__index top-area__index-incoming">{index + 1}</div>
-            <span className="top-area__name">{area.name}:</span>
-            <span className="top-area__count">{area.count} commuters</span>
+            <div className="top-area__details">
+              <span className="top-area__name">{area.name}:</span>
+              <span className="top-area__count">{area.count} commuters</span>
+            </div>
           </div>
         ))}
       </>
