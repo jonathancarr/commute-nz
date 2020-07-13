@@ -3,8 +3,9 @@ import ModeOfTransportChart from './ModeOfTransportChart';
 import DataSources from './DataSources';
 import CommutersInOutChart from './CommutersInOutChart';
 import Instructions from './Instructions';
+import TopAreas from './TopAreas';
 
-const DetailsPanel = ({ selected, commutes, transportModes, loading }) => {
+const DetailsPanel = ({ selected, commutes, transportModes, topAreas, loading, setTooltip }) => {
   return (
     <div className="commute-nz__details-panel">
       <div className="commute-nz__details details">
@@ -13,10 +14,16 @@ const DetailsPanel = ({ selected, commutes, transportModes, loading }) => {
             <CommutersInOutChart
               name={selected.name}
               commutes={commutes}
+              setTooltip={setTooltip}
+            />
+            <TopAreas
+              topAreas={topAreas}
+              name={selected.name}
             />
             <ModeOfTransportChart
               name={selected.name}
               transportModes={transportModes}
+              setTooltip={setTooltip}
             />
           </>
         )}

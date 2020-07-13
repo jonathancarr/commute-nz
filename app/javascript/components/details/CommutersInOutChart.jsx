@@ -21,7 +21,7 @@ const COLORS = {
 
 const KEYS = ['commuteIn', 'commuteOut', 'local'];
 
-const CommutersInOutChart = ({ name, commutes }) => {
+const CommutersInOutChart = ({ name, commutes, setTooltip }) => {
   const pieRef = useRef(null);
   const keyRef = useRef(null);
   const pieGenerator = useRef(null);
@@ -77,11 +77,22 @@ const CommutersInOutChart = ({ name, commutes }) => {
         .attr('fill', d => COLORS[d.data])
         .attr("stroke", "white")
         .style("stroke-width", "2px")
+        .on("mouseover", function (d) {
+          setTooltip(
+            `${labels[d.data]}: <strong>${d.value}</strong>`,
+            event.pageX - 25,
+            event.pageY - 20,
+          );
+        })
+        .on("mouseout", function (d) {
+          setTooltip(null);
+        })
 
     select(pieRef.current)
       .append("g")
       .attr("class", "pie-labels")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+      .style("pointer-events", "none")
 
     select(keyRef.current)
       .append("g")

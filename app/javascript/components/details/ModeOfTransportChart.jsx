@@ -1,8 +1,9 @@
 import React from 'react'
 import { useRef, useEffect, useState } from 'react';
-import { select } from 'd3-selection';
+import { select, event } from 'd3-selection';
 import { scaleLinear } from 'd3-scale';
 import { axisBottom } from 'd3-axis';
+import { useMemo } from 'react';
 
 const KEY_LABELS = {
   "Work at home": "Work at home",
@@ -25,13 +26,19 @@ const COLORS = {
   local: "#9b59b6",
 }
 
-const ModeOfTransportChart = ({ transportModes, name }) => {
+const ModeOfTransportChart = ({ transportModes, name, setTooltip }) => {
   const svgRef = useRef(null);
   const values = useRef([]);
   const textWidth = useRef(0);
   const xOffsets = useRef(null);
 
   const [loaded, setLoaded] = useState(false);
+
+  const tooltipSuffixes = useMemo(() => ({
+    incoming: `into ${name}`,
+    outgoing: `out of ${name}`,
+    local: `within ${name}`,
+  }), [name]);
 
   useEffect(() => {
     const svg = select(svgRef.current);
@@ -75,9 +82,17 @@ const ModeOfTransportChart = ({ transportModes, name }) => {
       .attr("fill", d => COLORS[d.direction])
       .attr("x", textWidth.current + 10)
       .attr("y", d => 30 * d.modeIndex)
-      .attr("width", 20)
+      .attr("width", 0)
       .attr("height", 20)
       .attr("stroke", "white")
+      .on("mouseover", d => {
+        setTooltip(
+          `${d.mode} ${tooltipSuffixes[d.direction]}: <strong>${transportModes[d.mode][d.direction]}</strong>`,
+          event.pageX,
+          event.pageY - 25,
+        )
+      })
+      .on("mouseout", d => setTooltip(null))
 
     svg.append("g").attr("class", "axis")
 

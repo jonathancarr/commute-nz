@@ -4,7 +4,7 @@ import { geoIdentity, geoPath } from 'd3-geo'
 import { zoom, zoomIdentity, zoomTransform } from 'd3-zoom'
 import { scaleLinear, scaleLog } from 'd3-scale'
 
-const MapPanel = ({ features, selected, setSelected, commutes, loading }) => {
+const MapPanel = ({ features, selected, setSelected, commutes, loading, setTooltip }) => {
   const svgRef = useRef(null);
 
   const zom = useRef(null);
@@ -148,9 +148,11 @@ const MapPanel = ({ features, selected, setSelected, commutes, loading }) => {
         .attr("id", (d) => `path-${d.properties.SA22018_V1}`)
         .attr("fill", "#1abc9c")
         .attr("stroke-width", 0.03)
-        .attr("stroke", (d) => "#FFFFFF")
-        .style("cursor", "pointer")
+        .attr("stroke", d => "#FFFFFF")
+        .style("cursor", d => d.properties.LAND_AREA_ === 0 ? "default" : "pointer")
         .on("mouseover", function (d) {
+          const title = d.properties.SA22018__1;
+          setTooltip(`<strong>${title}</strong>`, event.pageX, event.pageY - 20);
           if (selectedRef.current && selectedRef.current.id == d.properties.SA22018_V1) {
             select(this).transition().attr("fill", "#8e44ad");
           } else {
@@ -158,6 +160,7 @@ const MapPanel = ({ features, selected, setSelected, commutes, loading }) => {
           }
         })
         .on("mouseout", function (d) {
+          setTooltip(null);
           if (selectedRef.current && selectedRef.current.id == d.properties.SA22018_V1) {
             select(this).transition().attr("fill", "#9b59b6");
           } else {

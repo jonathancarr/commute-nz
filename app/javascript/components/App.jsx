@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import Header from './header/Header'
 import MapPanel from './map/MapPanel'
 import DetailsPanel from './details/DetailsPanel'
 import { json, csv } from 'd3-request'
 import { feature } from 'topojson-client'
+import { useCallback } from 'react'
+import { select } from 'd3-selection'
 
 const TRANSPORT_MODES = [
   "Work at home",
@@ -25,7 +27,23 @@ const App = () => {
   const [census, setCensus] = useState(null);
   const [selected, setSelected] = useState(null);
 
+  const tooltipRef = useRef(null);
+
   const loaded = useMemo(() => census && features, [census, features])
+
+  const setTooltip = useCallback((content, x, y) => {
+    const tooltip = select(tooltipRef.current);
+    if (content) {
+      tooltip
+        .html(content)
+        .style('opacity', 0.95)
+        .style('top', `${y}px`)
+        .style('left', `${x}px`)
+        .style('transform', 'translate(-50%, -50%)')
+    } else {
+      tooltip.style('opacity', 0);
+    }
+  });
 
   const areas = useMemo(() => features ? features.features.reduce(
     (result, feature) => [...result, {
@@ -60,6 +78,18 @@ const App = () => {
     }
     return result;
   }, { incoming: {}, outgoing: {}, local: {}}) : [], [selected, census])
+
+  const topAreas = useMemo(() => {
+    if (commutes.length === 0) return;
+
+    return ['incoming', 'outgoing'].reduce((result, direction) => ({
+      ...result,
+      [direction]: Object.entries(commutes[direction])
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([key, count]) => ({ name: areas.find((a) => a.id === key).name, count: count }))
+    }), {})
+  }, [commutes]);
 
   const transportModes = useMemo(() => {
     if (!census || !selected) return null;
@@ -112,6 +142,9 @@ const App = () => {
 
   return (
     <div className="commute-nz">
+      <div className="commute-nz__tooltip" ref={tooltipRef} >
+        oooh boy
+      </div>
       <Header
         areas={areas}
         selected={selected}
@@ -120,18 +153,21 @@ const App = () => {
       />
         <div className="commute-nz__content">
         <MapPanel
-          features  ={features}
+          features={features}
           areas={areas}
           selected={selected}
           setSelected={setSelected}
           commutes={commutes}
           loading={!loaded}
+          setTooltip={setTooltip}
         />
         <DetailsPanel
           selected={selected}
           commutes={commutes}
           transportModes={transportModes}
+          topAreas={topAreas}
           loading={!loaded}
+          setTooltip={setTooltip}
         />
       </div>
     </div>
