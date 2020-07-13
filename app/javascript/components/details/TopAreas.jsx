@@ -13,24 +13,24 @@ const COLORS = {
 
 const TopAreas = ({ topAreas, name }) => (
   <div className="top-areas">
-    { topAreas.incoming.length > 0 && (
+    { topAreas.outgoing.length > 0 && (
       <>
-        <h3 className="top-areas__title">Top areas commuted to from {name}</h3>
-        { topAreas.incoming.map((area, index) => (
+        <h3 className="top-areas__title">Top areas commuted to, from {name}</h3>
+        { topAreas.outgoing.map((area, index) => (
           <div className="top-area">
-            <div className="top-area__index top-area__index-incoming">{index + 1}</div>
+            <div className="top-area__index top-area__index-outgoing">{index + 1}</div>
             <span className="top-area__name">{area.name}:</span>
             <span className="top-area__count">{area.count} commuters</span>
           </div>
         ))}
       </>
     )}
-    { topAreas.outgoing.length > 0 && (
+    { topAreas.incoming.length > 0 && (
       <>
-        <h3 className="top-areas__title">Top areas commuted from to {name}</h3>
-        { topAreas.outgoing.map((area, index) => (
+        <h3 className="top-areas__title">Top areas commuted from, to {name}</h3>
+        { topAreas.incoming.map((area, index) => (
           <div className="top-area">
-            <div className="top-area__index top-area__index-outgoing">{index + 1}</div>
+            <div className="top-area__index top-area__index-incoming">{index + 1}</div>
             <span className="top-area__name">{area.name}:</span>
             <span className="top-area__count">{area.count} commuters</span>
           </div>

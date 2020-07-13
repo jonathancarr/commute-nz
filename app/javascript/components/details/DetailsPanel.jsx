@@ -16,14 +16,14 @@ const DetailsPanel = ({ selected, commutes, transportModes, topAreas, loading, s
               commutes={commutes}
               setTooltip={setTooltip}
             />
-            <TopAreas
-              topAreas={topAreas}
-              name={selected.name}
-            />
             <ModeOfTransportChart
               name={selected.name}
               transportModes={transportModes}
               setTooltip={setTooltip}
+            />
+            <TopAreas
+              topAreas={topAreas}
+              name={selected.name}
             />
           </>
         )}
