@@ -141,7 +141,7 @@ const MapPanel = ({ features, selected, setSelected, commutes, loading, setToolt
       .append("g")
       .attr("class", "features")
       .selectAll("path")
-      .data(features.features)
+      .data(features.features.filter(d => d.properties.LAND_AREA_ > 0))
       .enter()
       .append("path")
         .attr("d", path.current)
