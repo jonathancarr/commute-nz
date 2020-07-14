@@ -15,7 +15,7 @@ const TopAreas = ({ topAreas, name }) => (
   <div className="top-areas">
     { topAreas.outgoing.length > 0 && (
       <>
-        <h3 className="top-areas__title">Top areas commuted to, from {name}</h3>
+        <h1 className="top-areas__title">Areas with the most commuters from {name}</h1>
         { topAreas.outgoing.map((area, index) => (
           <div className="top-area">
             <div className="top-area__index top-area__index-outgoing">{index + 1}</div>
@@ -29,7 +29,7 @@ const TopAreas = ({ topAreas, name }) => (
     )}
     { topAreas.incoming.length > 0 && (
       <>
-        <h3 className="top-areas__title">Top areas commuted from, to {name}</h3>
+        <h1 className="top-areas__title">Areas with the most commuters to {name}</h1>
         { topAreas.incoming.map((area, index) => (
           <div className="top-area">
             <div className="top-area__index top-area__index-incoming">{index + 1}</div>

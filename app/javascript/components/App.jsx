@@ -6,6 +6,7 @@ import { json, csv } from 'd3-request'
 import { feature } from 'topojson-client'
 import { useCallback } from 'react'
 import { select } from 'd3-selection'
+import "@babel/polyfill";
 
 const TRANSPORT_MODES = [
   "Work at home",
