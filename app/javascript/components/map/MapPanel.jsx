@@ -198,6 +198,7 @@ const MapPanel = ({ features, selected, setSelected, commutes, loading, setToolt
   return (
     <div className="commute-nz__map-panel">
         <svg className="commute-nz__map" ref={svgRef}>
+          <rect className="commute-nz__map-background" width="100%" height="100%"/>
           { loading && (
             <text className="commute-nz__map-loading" x="50%" y="50%">
               Loading...

@@ -136,8 +136,12 @@ body {
         position: absolute;
         width: calc(100% - 10px);
         height: calc(100% - 20px);
-        background: #3498db55;
         box-shadow: 0 5px 3px #77777744;
+
+        &-background {
+            fill: #3498db55;
+            pointer-events: none;
+        }
     }
 
     &__map-loading {
