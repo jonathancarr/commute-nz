@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 import { select, event } from 'd3-selection'
 import { geoIdentity, geoPath } from 'd3-geo'
 import { zoom, zoomIdentity, zoomTransform } from 'd3-zoom'
@@ -19,6 +19,12 @@ const MapPanel = ({ features, selected, setSelected, commutes, loading, setToolt
   const dimensions = useRef(null);
 
   const selectedRef = useRef(null);
+
+  const setDimensions = useCallback(() => {
+    dimensions.current = [svgRef.current.clientWidth, svgRef.current.clientHeight];
+  });
+
+  window.addEventListener("resize", setDimensions);
 
   useEffect(() => {
     selectedRef.current = selected;
@@ -120,7 +126,7 @@ const MapPanel = ({ features, selected, setSelected, commutes, loading, setToolt
   useEffect(() => {
     if (!features) return;
 
-    dimensions.current = [svgRef.current.clientWidth, svgRef.current.clientHeight];
+    setDimensions();
     const [width, height] = dimensions.current;
 
     const margin = 20;
