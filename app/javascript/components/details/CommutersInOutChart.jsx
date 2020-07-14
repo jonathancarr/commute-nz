@@ -77,16 +77,6 @@ const CommutersInOutChart = ({ name, commutes, setTooltip }) => {
         .attr('fill', d => COLORS[d.data])
         .attr("stroke", "white")
         .style("stroke-width", "2px")
-        .on("mouseover", function (d) {
-          setTooltip(
-            `${labels[d.data]}: <strong>${d.value}</strong>`,
-            event.pageX - 25,
-            event.pageY - 20,
-          );
-        })
-        .on("mouseout", function (d) {
-          setTooltip(null);
-        })
 
     select(pieRef.current)
       .append("g")
@@ -161,6 +151,16 @@ const CommutersInOutChart = ({ name, commutes, setTooltip }) => {
     select(pieRef.current)
       .selectAll('.pieSlice')
       .data(data_ready)
+      .on("mouseover", function (d) {
+        setTooltip(
+          `${labels[d.data]}: <strong>${d.value}</strong>`,
+          event.pageX - 25,
+          event.pageY - 20,
+        );
+      })
+      .on("mouseout", function (d) {
+        setTooltip(null);
+      })
       .transition()
       .duration(500)
       .attrTween("d", arcTween)

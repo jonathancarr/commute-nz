@@ -85,14 +85,6 @@ const ModeOfTransportChart = ({ transportModes, name, setTooltip }) => {
       .attr("width", 0)
       .attr("height", 20)
       .attr("stroke", "white")
-      .on("mouseover", d => {
-        setTooltip(
-          `${d.mode} ${tooltipSuffixes[d.direction]}: <strong>${transportModes[d.mode][d.direction]}</strong>`,
-          event.pageX,
-          event.pageY - 25,
-        )
-      })
-      .on("mouseout", d => setTooltip(null))
 
     svg.append("g").attr("class", "axis")
 
@@ -134,6 +126,14 @@ const ModeOfTransportChart = ({ transportModes, name, setTooltip }) => {
       .selectAll(".bar")
       .each(function() {
         select(this)
+          .on("mouseover", d => {
+            setTooltip(
+              `${d.mode} ${tooltipSuffixes[d.direction]}: <strong>${transportModes[d.mode][d.direction]}</strong>`,
+              event.pageX,
+              event.pageY - 25,
+            )
+          })
+          .on("mouseout", d => setTooltip(null))
           .transition()
           .attr("x", d => {
             return xOffsets.current[d.mode]
